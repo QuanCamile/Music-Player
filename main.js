@@ -11,6 +11,11 @@ const $ = document.querySelector.bind(document);
     const updateTime = $('#progress');
     const timeStart = $('.timeStart');
     const timeEnd = $('.timeEnd');
+    const nextSong = $('.btn.btn-next');
+    const preSong = $('.btn.btn-prev');
+    const randomSong = $('.btn.btn-random');
+  
+
 
 
     //app -- list musci
@@ -28,31 +33,31 @@ const $ = document.querySelector.bind(document);
             {
                 name: '2AM',
                 singer: 'JustaTee feat Big Daddy',
-                path: './music/lohendonglam.mp3',
+                path: './music/2AM.mp3',
                 image: './img/JustaTee.jpg'
             },
             {
                 name: 'OK',
                 singer: 'BINZ',
-                path: './music/lohendonglam.mp3',
+                path: './music/OK.mp3',
                 image: './img/binz.jpg'
             },
             {
                 name: 'Khuôn Mặt Đáng Thương',
                 singer: 'Sơn Tùng MTP',
-                path: './music/lohendonglam.mp3',
+                path: './music/khuonmatdangthuong.mp3',
                 image: './img/sontung.jpg'
             },
             {
                 name: 'Yêu Cô Gái Bạc Liêu',
                 singer: 'Nghi Nghi',
-                path: './music/lohendonglam.mp3',
+                path: './music/yeucogaibaclieu.mp3',
                 image: './img/nghinghi.jpg'
             },
             {
                 name: 'Nến Và Hoa',
                 singer: 'Anh Tú',
-                path: './music/lohendonglam.mp3',
+                path: './music/nenvahoa.mp3',
                 image: './img/anhtu.jpg'
             },
         ],
@@ -112,6 +117,16 @@ const $ = document.querySelector.bind(document);
         handleEvents: function(){
             const cdWidth = cd.offsetWidth;
             const _this = this;
+
+            //xu ly cd play, pause
+            const cdThumbAnimate = cdThumb.animate([
+                { transform: 'rotate(360deg)'}
+            ], {
+                duration: 10000, //10s
+                iterations: Infinity
+
+            });
+            cdThumbAnimate.pause();
             //su kien cuon man hinh phong to thu nho CD
             document.onscroll = function (){
                 const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -147,12 +162,29 @@ const $ = document.querySelector.bind(document);
 
                 }
             }
+            
+            //khi chuyen bai ke tiep
+            nextSong.onclick = function(){
+                _this.nextSong();
+                audio.play();
+            }
+
+            //khi chuyen bai truoc do
+            preSong.onclick = function(){
+                _this.preSong();
+                audio.play();
+            }
+
+            //random bai hat
+            randomSong.onclick = function(e){
+                e.target.classList.add('active');
+            }
 
             //khi lang xe songs duoc play
             audio.onplay = function(){
                 _this.isPlaying = true;
                 changeiconPlay.classList.add('playing');
-             
+                cdThumbAnimate.play();
             }
 
             //Lấy ra tổng thời gian mà bài hát có
@@ -164,14 +196,13 @@ const $ = document.querySelector.bind(document);
                     timeEnd.innerHTML = "0"+minute+":"+second;
                 }
                 timeEnd.innerHTML = "0"+minute+":"+second;
-
-                
             }
 
             //khi lang xe songs bi pause
             audio.onpause = function(){
                 _this.isPlaying = false;
                 changeiconPlay.classList.remove('playing');
+                cdThumbAnimate.pause();
             }
 
             //khi tien do bai hat thay doi
@@ -197,6 +228,24 @@ const $ = document.querySelector.bind(document);
             audio.src = this.currentSong.path;
             
 
+        },
+        nextSong: function(){
+            this.currentIndex++;
+            if(this.currentIndex > this.songs.length -1){
+                this.currentIndex = 0;
+
+            }
+           
+            this.loadCurrentSong();
+        },
+        preSong: function(){
+            this.currentIndex--;
+            if(this.currentIndex < 0){
+                this.currentIndex = this.songs.length-1;
+
+            }
+           
+            this.loadCurrentSong();
         },
         start: function () {
             // dinh nghia cac thuoc tinh cho Object

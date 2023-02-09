@@ -10,7 +10,7 @@
   }
   
   body {
-    background-color: #f5f5f5;
+    background-color: #9B30FF;
   }
   
   html {
@@ -38,7 +38,7 @@
   
   .dashboard {
     padding: 16px 16px 14px;
-    background-color: #fff;
+    background-color: #FFD700         ;
     position: fixed;
     top: 0;
     width: 100%;
@@ -63,10 +63,13 @@
   }
   
   /* CD */
+
   .cd {
     display: flex;
     margin: auto;
     width: 200px;
+    
+
   }
   
   .cd-thumb {
