@@ -1,0 +1,231 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music player</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+    integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+    crossorigin="anonymous" />
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+
+<div class="player">
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <!-- Header -->
+        <header>
+            <h4>Now playing:</h4>
+            <h2>String 57th & 9th</h2>
+        </header>
+
+        <!-- CD -->
+        <div class="cd">
+            <div class="cd-thumb" style="background-image: url('./img/Thoa.png')">
+            </div>
+
+        </div>
+
+        <!-- Control -->
+        <div class="control">
+            <div class="btn btn-repeat">
+                <i class="fas fa-redo"></i>
+            </div>
+            <div class="btn btn-prev">
+                <i class="fas fa-step-backward"></i>
+            </div>
+            <div class="btn btn-toggle-play">
+                <i class="fas fa-pause icon-pause"></i>
+                <i class="fas fa-play icon-play"></i>
+            </div>
+            <div class="btn btn-next">
+                <i class="fas fa-step-forward"></i>
+            </div>
+            <div class="btn btn-random">
+                <i class="fas fa-random"></i>
+            </div>
+        </div>
+
+        <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+
+        <audio id="audio" src=""></audio>
+    </div>
+
+    <!-- Playlist -->
+    <div class="playlist">
+
+    </div>
+</div>
+<script>
+    const $ = document.querySelector.bind(document);
+    const $$ = document.querySelectorAll.bind(document);
+    const playlist = $('.playlist');
+    const headerH2 = $('header h2');
+    const cdThumb = $('.cd-thumb');
+    const audio = $('#audio');
+    const cd = $('.cd');
+    const playBtn = $('.btn.btn-toggle-play');
+    const changeiconPlay = $('.player');
+    const loopSong = $('.btn.btn-repeat');
+    const updateTime = $('#progress');
+    console.log(updateTime);
+    //app -- list musci
+    const app = {
+        currentIndex: 0,
+        isPlaying: false,
+        isLoop: false,
+        songs: [
+            {
+                name: 'Lỡ Hẹn Với Dòng Lam',
+                singer: 'Thái Học',
+                path: './music/lohendonglam.mp3',
+                image: './img/thaihoc.jpg'
+            },
+            {
+                name: '2AM',
+                singer: 'JustaTee feat Big Daddy',
+                path: './music/lohendonglam.mp3',
+                image: './img/JustaTee.jpg'
+            },
+            {
+                name: 'OK',
+                singer: 'BINZ',
+                path: './music/lohendonglam.mp3',
+                image: './img/binz.jpg'
+            },
+            {
+                name: 'Khuôn Mặt Đáng Thương',
+                singer: 'Sơn Tùng MTP',
+                path: './music/lohendonglam.mp3',
+                image: './img/sontung.jpg'
+            },
+            {
+                name: 'Yêu Cô Gái Bạc Liêu',
+                singer: 'Nghi Nghi',
+                path: './music/lohendonglam.mp3',
+                image: './img/nghinghi.jpg'
+            },
+            {
+                name: 'Nến Và Hoa',
+                singer: 'Anh Tú',
+                path: './music/lohendonglam.mp3',
+                image: './img/anhtu.jpg'
+            },
+        ],
+
+        render: function () {
+            const html = this.songs.map(song => {
+                return `<div class="song">
+                            <div class="thumb" 
+                                style="background-image: url('${song.image}')">
+                            </div>
+                            <div class="body">
+                                <h3 class="title">${song.name}</h3>
+                                <p class="author">${song.singer}</p>
+                            </div>
+                            <div class="option">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                        </div>
+                        `;
+            })
+            playlist.innerHTML = html.join('');
+
+        },
+        
+        defineProperties: function(){
+            Object.defineProperty(this, 'currentSong', {
+                get: function(){
+                    return this.songs[this.currentIndex];
+                }
+            });
+        },
+
+        handleEvents: function(){
+            const cdWidth = cd.offsetWidth;
+            const _this = this;
+            //su kien cuon man hinh phong to thu nho CD
+            document.onscroll = function (){
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                const newCD = cdWidth - scrollTop;
+                cd.style.width = newCD > 0 ? newCD + 'px': 0;
+                cd.style.opacity = newCD / cdWidth;
+            }
+
+            //xu ly lap bai hat
+            loopSong.onclick = function(){
+                if(_this.isLoop){
+                    loopSong.classList.remove('active');
+                    _this.isLoop = false;
+                }
+                else{
+                    _this.isLoop = true;
+                    loopSong.classList.add('active');
+                    audio.loop;
+                }
+               
+                
+            }
+
+            //xu ly khi click play
+            playBtn.onclick = function(){
+                if(_this.isPlaying){            
+                    audio.pause();
+                }
+                else{
+                    audio.play();   
+                }
+            }
+
+            //khi lang xe songs duoc play
+            audio.onplay = function(){
+                _this.isPlaying = true;
+                changeiconPlay.classList.add('playing');
+            }
+
+            //khi lang xe songs bi pause
+            audio.onpause = function(){
+                _this.isPlaying = false;
+                changeiconPlay.classList.remove('playing');
+            }
+
+            //khi tien do bai hat thay doi
+            audio.ontimeupdate = function(){
+                if(audio.duration){
+                    const progressPercent = Math.floor(audio.currentTime/audio.duration*100);
+                    updateTime.value = progressPercent;
+                }
+            }
+
+            //xu ly khi tua bai hat
+            updateTime.oninput  = function(e){
+               //phan tram => số giây trong bài hát
+                const currentTimeUpdate = e.target.value/100*audio.duration;
+                audio.currentTime = currentTimeUpdate;  
+            }
+
+        },
+        loadCurrentSong: function(){
+            headerH2.textContent = this.currentSong.name;
+            cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`;
+            audio.src = this.currentSong.path;
+            
+
+        },
+        start: function () {
+            // dinh nghia cac thuoc tinh cho Object
+            this.defineProperties();
+
+            // lang nghe va xu ly cac su kien - DOM Events
+            this.handleEvents();
+
+            // tai thong tin bai hat dau tien vao app khi run
+            this.loadCurrentSong();
+
+            //Render playlist
+            this.render();
+          
+           
+        }
+    };
+
+    app.start();
+</script>
+<!-- Design from: https://static.collectui.com/shots/3671744/musicloud-revolutionary-app-for-music-streaming-large -->
