@@ -187,3 +187,9 @@
     font-size: 18px;
   }
   
+  .time-audio{
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
