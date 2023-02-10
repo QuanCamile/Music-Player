@@ -23,6 +23,7 @@ const $ = document.querySelector.bind(document);
         currentIndex: 0,
         isPlaying: false,
         isLoop: false,
+        isRandom: false,
         songs: [
             {
                 name: 'Lỡ Hẹn Với Dòng Lam',
@@ -63,8 +64,8 @@ const $ = document.querySelector.bind(document);
         ],
 
         render: function () {
-            const html = this.songs.map(song => {
-                return `<div class="song">
+            const html = this.songs.map((song, index) => {
+                return `<div class="song ${index === this.currentIndex? 'active':''}">
                             <div class="thumb" 
                                 style="background-image: url('${song.image}')">
                             </div>
@@ -165,19 +166,45 @@ const $ = document.querySelector.bind(document);
             
             //khi chuyen bai ke tiep
             nextSong.onclick = function(){
-                _this.nextSong();
+                if(_this.isRandom){
+                    _this.randomSong();
+                }
+                else{
+                    _this.nextSong();
+                }
                 audio.play();
+                _this.render();
+                _this.scrollToActiveSong();
             }
 
             //khi chuyen bai truoc do
             preSong.onclick = function(){
-                _this.preSong();
+                if(_this.isRandom){
+                    _this.randomSong();
+                }
+                else{
+                    _this.preSong();
+                }
                 audio.play();
+                _this.render();
+                _this.scrollToActiveSong();
+               
+
             }
 
             //random bai hat
-            randomSong.onclick = function(e){
-                e.target.classList.add('active');
+            randomSong.onclick = function(){
+                if(_this.isRandom){
+                    randomSong.classList.remove('active');
+                    _this.isRandom = false;
+                 
+                }
+                else{
+                    _this.isRandom = true;
+                    randomSong.classList.add('active');
+                }
+               
+                
             }
 
             //khi lang xe songs duoc play
@@ -221,7 +248,31 @@ const $ = document.querySelector.bind(document);
                 audio.currentTime = currentTimeUpdate;  
             }
 
+            //xu ly auto next song
+            audio.onended = function(){
+                if(_this.isRandom){
+                    _this.randomSong();
+                }
+                else{
+                    _this.nextSong();
+                }
+                audio.play();
+            } 
+
         },
+
+        //xu ly keo bai hat dang hat len view
+        scrollToActiveSong: function(){
+           setTimeout(() => {
+                $('.song.active').scrollIntoView(
+                    {
+                        behavior: "smooth", 
+                        block: "end", 
+                        inline: "nearest"
+                    });
+           }, 500)
+        },
+
         loadCurrentSong: function(){
             headerH2.textContent = this.currentSong.name;
             cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`;
@@ -233,20 +284,28 @@ const $ = document.querySelector.bind(document);
             this.currentIndex++;
             if(this.currentIndex > this.songs.length -1){
                 this.currentIndex = 0;
-
             }
-           
             this.loadCurrentSong();
         },
         preSong: function(){
             this.currentIndex--;
             if(this.currentIndex < 0){
                 this.currentIndex = this.songs.length-1;
-
             }
            
             this.loadCurrentSong();
         },
+        randomSong: function(){
+            do
+            {
+                var randomIndex = Math.floor(Math.random() * this.songs.length);
+            }
+            while(randomIndex === this.currentIndex);
+            this.currentIndex = randomIndex;
+            this.loadCurrentSong();
+
+        },
+        
         start: function () {
             // dinh nghia cac thuoc tinh cho Object
             this.defineProperties();
@@ -256,6 +315,8 @@ const $ = document.querySelector.bind(document);
 
             // tai thong tin bai hat dau tien vao app khi run
             this.loadCurrentSong();
+
+            
 
             //Render playlist
             this.render();

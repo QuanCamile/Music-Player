@@ -44,6 +44,9 @@
     width: 100%;
     max-width: 480px;
     border-bottom: 1px solid #ebebeb;
+    border-radius: 5px;
+ 
+    
   }
   
   /* HEADER */
@@ -148,6 +151,7 @@
   }
   
   .song.active {
+    
     background-color: var(--primary-color);
   }
   
