@@ -35,17 +35,33 @@
   .player.playing .icon-play {
     display: none;
   }
+
+  .player .icon-mute{
+    display: none;
+
+  }
   
+  /*icon mute === không có âm lượng*/
+  .player.muting .icon-mute{
+    display: inline-block;
+  }
+
+  /*icon unmute === có âm lượng*/
+  .player.muting .icon-unmute{
+    display: none;
+  }
+
+
   .dashboard {
     padding: 16px 16px 14px;
     background-color: #FFD700         ;
     position: fixed;
-    top: 0;
+    top: 50;
     width: 100%;
     max-width: 480px;
     border-bottom: 1px solid #ebebeb;
     border-radius: 5px;
- 
+    
     
   }
   
@@ -85,6 +101,11 @@
   }
   
   /* CONTROL */
+
+  #volume{
+    width: 20%; /* Full-width */
+    height: 10px; /* Specified height */
+  }
   .control {
     display: flex;
     align-items: center;
@@ -97,11 +118,19 @@
     padding: 18px;
     font-size: 18px;
   }
-  
+  .btn.btn-mute{
+    color: #666;
+    font-size: 18px;
+  }
+
   .control .btn.active {
     color: var(--primary-color);
   }
   
+  .btn.btn-mute.active{
+    color: var(--primary-color);
+
+  }
   .control .btn-toggle-play {
     width: 56px;
     height: 56px;
@@ -136,7 +165,7 @@
   
   /* PLAYLIST */
   .playlist {
-    margin-top: 408px;
+    margin-top: 470px;
     padding: 12px;
   }
   

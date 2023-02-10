@@ -14,8 +14,8 @@ const $ = document.querySelector.bind(document);
     const nextSong = $('.btn.btn-next');
     const preSong = $('.btn.btn-prev');
     const randomSong = $('.btn.btn-random');
-  
-
+    const muteBtn = $('.btn.btn-mute');
+    
 
 
     //app -- list musci
@@ -24,6 +24,7 @@ const $ = document.querySelector.bind(document);
         isPlaying: false,
         isLoop: false,
         isRandom: false,
+        isMuting: false,
         songs: [
             {
                 name: 'Lỡ Hẹn Với Dòng Lam',
@@ -152,6 +153,22 @@ const $ = document.querySelector.bind(document);
                 
             }
 
+            //xu ly khi click mute
+            muteBtn.onclick = function(){
+                if(_this.isMuting){
+                    muteBtn.classList.remove('active');
+                    changeiconPlay.classList.remove('muting');
+                    _this.isMuting = false;
+                    audio.muted = false;
+                }
+                else{
+                    _this.isMuting = true;
+                    muteBtn.classList.add('active');
+                    changeiconPlay.classList.add('muting');
+                    audio.muted = true;
+                }
+            }
+
             //xu ly khi click play
             playBtn.onclick = function(){
                 if(_this.isPlaying){            
@@ -159,8 +176,6 @@ const $ = document.querySelector.bind(document);
                 }
                 else{
                     audio.play();
-                 
-
                 }
             }
             
@@ -188,8 +203,6 @@ const $ = document.querySelector.bind(document);
                 audio.play();
                 _this.render();
                 _this.scrollToActiveSong();
-               
-
             }
 
             //random bai hat
@@ -197,14 +210,12 @@ const $ = document.querySelector.bind(document);
                 if(_this.isRandom){
                     randomSong.classList.remove('active');
                     _this.isRandom = false;
-                 
                 }
                 else{
                     _this.isRandom = true;
                     randomSong.classList.add('active');
                 }
-               
-                
+
             }
 
             //khi lang xe songs duoc play
