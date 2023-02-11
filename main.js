@@ -1,5 +1,9 @@
-const $ = document.querySelector.bind(document);
+    const $ = document.querySelector.bind(document);
     const $$ = document.querySelectorAll.bind(document);
+
+    const PLAYER_STORAGE_KEY = 'QUAN_PLAYER';
+
+
     const playlist = $('.playlist');
     const headerH2 = $('header h2');
     const cdThumb = $('.cd-thumb');
@@ -26,6 +30,7 @@ const $ = document.querySelector.bind(document);
         isLoop: false,
         isRandom: false,
         isMuting: false,
+        config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
         songs: [
             {
                 name: 'I Do',
@@ -64,7 +69,10 @@ const $ = document.querySelector.bind(document);
                 image: './img/anhtu.jpg'
             },
         ],
-
+        setConfig:function(key, value){
+            this.config[key] = value;
+            localStorage.setItem(PLAYER_STORAGE_KEY,JSON.stringify(this.config));
+        },
         render: function () {
             const html = this.songs.map((song, index) => {
                 return `<div class="song ${index === this.currentIndex? 'active':''}" data-index=${index}>
@@ -130,6 +138,7 @@ const $ = document.querySelector.bind(document);
 
             });
             cdThumbAnimate.pause();
+            
             //su kien cuon man hinh phong to thu nho CD
             document.onscroll = function (){
                 const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -149,6 +158,8 @@ const $ = document.querySelector.bind(document);
                     _this.isLoop = true;
                     loopSong.classList.add('active');
                     audio.loop = true;
+                    _this.setConfig('isLoop', _this.isLoop);
+
                 }
                
                 
@@ -167,7 +178,9 @@ const $ = document.querySelector.bind(document);
                     muteBtn.classList.add('active');
                     changeiconPlay.classList.add('muting');
                     audio.muted = true;
+                    _this.setConfig('isMuting', _this.isMuting);
                 }
+               
             }
 
             //xu ly khi click play
@@ -215,6 +228,7 @@ const $ = document.querySelector.bind(document);
                 else{
                     _this.isRandom = true;
                     randomSong.classList.add('active');
+                    _this.setConfig('isRandom', _this.isRandom);
                 }
 
             }
@@ -292,6 +306,11 @@ const $ = document.querySelector.bind(document);
                 const song = e.target.closest('.song:not(.active)');
                 if(song || e.target.closest('.option')  ){
                     
+                    //xu ly click option
+                    if(e.target.closest('.option')){
+                        alert("Tính năng sắp ra mắt");
+                    }
+
                     //xu ly click song
                     if(song){
                         const songClick = Number(song.getAttribute('data-index'));
@@ -304,11 +323,7 @@ const $ = document.querySelector.bind(document);
                         audio.play();
 
                     }
-
-                    //xu ly click option
-                    if(e.target.closest('.option')){
-
-                    }
+                    
 
                 }
             }
@@ -358,8 +373,16 @@ const $ = document.querySelector.bind(document);
             this.loadCurrentSong();
 
         },
+        loadConfig: function(){
+            this.isRandom = this.config.isRandom;
+            this.isLoop = this.config.isLoop;
+            this.isMuting = this.config.isMuting;
+        },
         
         start: function () {
+            //load cacs setting cau hinh tu config ra ung dung
+            //this.loadConfig();
+
             // dinh nghia cac thuoc tinh cho Object
             this.defineProperties();
 
@@ -369,10 +392,11 @@ const $ = document.querySelector.bind(document);
             // tai thong tin bai hat dau tien vao app khi run
             this.loadCurrentSong();
 
-            
-
             //Render playlist
             this.render();
+
+            //hien thi ra ung dung
+            //randomSong.classList.tonggle('active', this.isRandom);
         }
     };
 
