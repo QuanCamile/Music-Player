@@ -103,7 +103,7 @@
   /* CONTROL */
 
   #volume{
-    width: 20%; /* Full-width */
+    width: 50%; /* Full-width */
     height: 10px; /* Specified height */
   }
   .control {
@@ -118,6 +118,18 @@
     padding: 18px;
     font-size: 18px;
   }
+  .control2 .btn {
+    color: #666;
+    padding: 2px;
+    font-size: 18px;
+  }
+  .control2 {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 18px 0 8px 0;
+  }
+
   .btn.btn-mute{
     color: #666;
     font-size: 18px;
@@ -165,7 +177,7 @@
   
   /* PLAYLIST */
   .playlist {
-    margin-top: 470px;
+    margin-top: 490px;
     padding: 12px;
   }
   

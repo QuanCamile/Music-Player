@@ -15,6 +15,7 @@ const $ = document.querySelector.bind(document);
     const preSong = $('.btn.btn-prev');
     const randomSong = $('.btn.btn-random');
     const muteBtn = $('.btn.btn-mute');
+    const volumeBtn = $('#volume');
     
 
 
@@ -224,6 +225,22 @@ const $ = document.querySelector.bind(document);
                 changeiconPlay.classList.add('playing');
                 cdThumbAnimate.play();
             }
+
+            //khi thay doi icon am luong thi am luong bai hat thay doi
+            volumeBtn.onchange  = function(){
+                const changeVolume = volumeBtn.value / 100;
+                
+                if(changeVolume === 0){
+                    changeiconPlay.classList.add('muting');
+                    audio.muted = true;
+                }
+                else{
+                    audio.volume = changeVolume;
+                    changeiconPlay.classList.remove('muting');
+                   
+                    audio.muted = false;
+                }
+            } 
 
             //Lấy ra tổng thời gian mà bài hát có
             audio.onloadedmetadata = function(){
