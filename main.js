@@ -67,7 +67,7 @@ const $ = document.querySelector.bind(document);
 
         render: function () {
             const html = this.songs.map((song, index) => {
-                return `<div class="song ${index === this.currentIndex? 'active':''}">
+                return `<div class="song ${index === this.currentIndex? 'active':''}" data-index=${index}>
                             <div class="thumb" 
                                 style="background-image: url('${song.image}')">
                             </div>
@@ -287,6 +287,31 @@ const $ = document.querySelector.bind(document);
                 audio.play();
             } 
 
+            //click song 
+            playlist.onclick = function(e){
+                const song = e.target.closest('.song:not(.active)');
+                if(song || e.target.closest('.option')  ){
+                    
+                    //xu ly click song
+                    if(song){
+                        const songClick = Number(song.getAttribute('data-index'));
+                        _this.currentIndex = songClick;
+                        _this.loadCurrentSong();
+                        _this.render();
+                        _this.scrollToActiveSong();
+                         
+
+                        audio.play();
+
+                    }
+
+                    //xu ly click option
+                    if(e.target.closest('.option')){
+
+                    }
+
+                }
+            }
         },
 
         //xu ly keo bai hat dang hat len view
