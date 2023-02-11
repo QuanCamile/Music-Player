@@ -28,10 +28,10 @@ const $ = document.querySelector.bind(document);
         isMuting: false,
         songs: [
             {
-                name: 'Lỡ Hẹn Với Dòng Lam',
-                singer: 'Thái Học',
-                path: './music/lohendonglam.mp3',
-                image: './img/thaihoc.jpg'
+                name: 'I Do',
+                singer: '911',
+                path: './music/Ido.mp3',
+                image: './img/Thoa.png'
             },
             {
                 name: '2AM',
